@@ -1,7 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  const [text, setText] = useState("");
+
+  const check = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/name");
+      if (response.status === 200) {
+        const name = response.data;
+        setText(name);
+      } else {
+        setText("failed");
+      }
+    } catch (error) {
+      setText("error");
+      console.log("check error", error);
+    }
+  };
+
+  useEffect(() => {
+    check();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -9,14 +32,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <a>{text}</a>
       </header>
     </div>
   );
